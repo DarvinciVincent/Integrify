@@ -1,0 +1,368 @@
+CREATE TABLE Users (
+	User_ID INTEGER PRIMARY KEY UNIQUE NOT NULL,
+	Name VARCHAR(100),
+	Address VARCHAR(150),
+	Age SMALLINT,
+	Email VARCHAR(150),
+	Account_status VARCHAR(50)
+);
+
+CREATE TABLE Books (
+	Book_ID INTEGER PRIMARY KEY UNIQUE NOT NULL,
+	Title VARCHAR(100),
+	ISBN VARCHAR(150),
+	Publication_year DATE,
+	Publisher VARCHAR(50),
+	Genre VARCHAR(50),
+	Number_of_pages SMALLINT
+);
+
+CREATE TABLE Authors (
+	Author_ID INTEGER PRIMARY KEY UNIQUE NOT NULL,
+	Author_name VARCHAR(50),
+	Biography VARCHAR(1500),
+	Nationality VARCHAR(50)
+);
+
+CREATE TABLE Book_reviews (
+	Review_ID INTEGER PRIMARY KEY UNIQUE NOT NULL,
+	Rating SMALLINT,
+	Comment VARCHAR(500),
+	User_ID INTEGER,
+	Book_ID INTEGER,
+	FOREIGN KEY (User_ID) REFERENCES Users(User_ID),
+	FOREIGN KEY (Book_ID) REFERENCES Books(Book_ID)
+);
+
+CREATE TABLE Book_author (
+	Author_ID INTEGER,
+	Book_ID INTEGER,
+	Field varchar(250),
+	FOREIGN KEY (Author_ID) REFERENCES Authors(Author_ID),
+	FOREIGN KEY (Book_ID) REFERENCES Books(Book_ID)
+);
+
+CREATE TABLE Copies_Of_Books (
+	Copy_ID INTEGER PRIMARY KEY UNIQUE NOT NULL,
+	Availability BOOLEAN,
+	Copy_Number SMALLINT,
+	Book_ID INTEGER,
+	Author_ID INTEGER,
+	FOREIGN KEY (Book_id) REFERENCES Books(Book_id),
+	FOREIGN KEY (Author_id) REFERENCES Authors(Author_id)
+);
+
+CREATE TABLE Loans (
+	Loan_ID INTEGER PRIMARY KEY UNIQUE NOT NULL,
+	Started_date DATE NOT NULL,
+	Returned_date DATE CHECK (Returned_date > Started_date),
+	Due_date DATE NOT NULL CHECK (Due_date > Started_date),
+	User_ID INTEGER,
+	Copy_ID INTEGER,
+	FOREIGN KEY (User_ID) REFERENCES Users(User_ID),
+	FOREIGN KEY (Copy_ID) REFERENCES Copies_Of_Books(Copy_ID)
+);
+
+CREATE TABLE Fines (
+	Fine_ID SERIAL PRIMARY KEY UNIQUE NOT NULL,
+	Fine_amount SMALLINT,
+	Fine_status VARCHAR(50),
+	Due_date DATE NOT NULL,
+	User_ID INTEGER,
+	Loan_ID INTEGER,
+	FOREIGN KEY (User_ID) REFERENCES Users(User_ID),
+	FOREIGN KEY (Loan_ID) REFERENCES Loans(Loan_ID)
+);
+
+
+insert into authors(author_id, author_name, biography, nationality)
+values
+    ('00001', 'Stephen King', 'Stephen Edwin King is an American author of horror, supernatural fiction, suspense, crime, science-fiction, and fantasy novels. Described as the "King of Horror", his books have sold more than 350 million copies as of 2006, and many have been adapted into films, television series, miniseries, and comic books.', 'USA'),
+    ('00002', 'J. K. Rowling', 'Joanne Rowling CH OBE FRSL, best known by her pen name J. K. Rowling, is a British author and philanthropist. She wrote Harry Potter, a seven-volume children''s fantasy series published from 1997 to 2007.', 'UK'),
+    ('00003', 'Dan Brown', 'Daniel Gerhard Brown is an American author best known for his thriller novels, including the Robert Langdon novels Angels & Demons, The Da Vinci Code, The Lost Symbol, Inferno, and Origin. His novels are treasure hunts that usually take place over a period of 24 hours.', 'USA'),
+    ('00004', 'Sam Johnson', 'Sam Johnson was an English playwright, poet and actor. He is regarded as the greatest writer in the English language and the world''s pre-eminent dramatist. He is often called England''s national poet and the "Bard of Avon".', 'Mexico'),
+    ('00005', 'Richardo Eli', 'Richardo Eli was an Italian novelist. Her first novel, The Bluest Eye, was published in 1970. The critically acclaimed Song of Solomon brought her national attention and won the National Book Critics Circle Award.', 'Italy'),
+    ('00006', 'Tina Kojonen', 'Tina Kojonen is a Finnish novelist known primarily for her six major novels, which interpret, critique, and comment upon the British landed gentry at the end of the 18th century. Austen''s plots often explore the dependence of women on marriage in the pursuit of favourable social standing and economic security.', 'Finland'),
+    ('00007', 'Liisa Backman', 'Liisa Backman was a Swedish author of gothic fiction, erotic literature, and Christian literature. She was best known for her series of novels The Vampire Chronicles. The first book became the subject of a film adaptation—Interview with the Vampire.', 'Sweden'),
+    ('00008', 'James West', 'James West was an English writer and social critic who created some of the world''s best-known fictional characters and is regarded by many as the greatest novelist of the Victorian era.', 'England'),
+    ('00009', 'Monica Park', 'Monica Park is an American novelist, short story writer, poet, and social activist. In 1982, she became the first African-American woman to win the Pulitzer Prize for Fiction, which she was awarded for her novel The Color Purple.', 'USA'),
+    ('00100','Elena Niels','Elena Niels was an English romance novelist and actress. She moved to Los Angeles in 1985 and spent most of her career there. She wrote 32 novels, all of which appeared on The New York Times bestsellers list. Her books have sold more than 500 million copies and have been translated into 40 languages. was an English romance novelist and actress. She moved to Los Angeles in 1985 and spent most of her career there. She wrote 32 novels, all of which appeared on The New York Times bestsellers list. Her books have sold more than 500 million copies and have been translated into 40 languages.','England'),
+    ('00101', 'Jane Jerad', 'Jane Jerad is an Italian author of more than 225 romance novels. She writes as J. D. Robb for the In Death series and has also written under the pseudonyms Jill March and for publications in the U.K. as Sarah Hardesty. Roberts was the first author to be inducted into the Romance Writers of America Hall of Fame.', 'Italy'),
+    ('00120', 'Solomon Fineman', 'Solomon Fineman is an American author, YouTuber, podcaster, and philanthropist. His books have more than 50 million copies in print worldwide, including The Fault in Our Stars, which is one of the best-selling books of all time.', 'USA'),
+    ('00121', 'Abraham Newton', 'Abraham Newton was an American journalist, editor, author, playwright, founder of the National Lesbian and Gay Journalists Association, and founding member of the Robert C. Maynard Institute for Journalism Education. In 2005, he was inducted into the NLGJA Hall of Fame.', 'USA'),
+    ('00130', 'Otega Adeyemi', 'Otega Adeyemi is a Nigerian-British popular author of children''s literature and short stories, a poet, and wartime fighter ace. His books have sold more than 300 million copies worldwide. Dahl has been called "one of the greatest storytellers for children of the 20th century".', 'Nigeria');	
+
+insert into books(book_id, title, isbn, publication_year, publisher, genre, number_of_pages)
+values
+	('40205660','The little prince','0-7475-3269-9','1943-12-28','Editions Gallimard','novella',100),
+	('60372276','To Kill a Mockingbird', '978-0-446-31078-9', '1960-12-28', 'Warner Books', 'Fiction', 324),
+	('80331845','1984', '978-0-451-52493-5', '1949-12-28', 'Signet Classics', 'Dystopian Fiction', 328),
+	('10507584','The Great Gatsby', '978-0-7432-7356-5', '1925-12-28', 'Scribner', 'Classic Literature', 180),
+	('70346932','Pride and Prejudice', '978-0-14-143951-8', '1813-12-28', 'Penguin Classics', 'Classic Literature', 352),
+	('80205644','Harry Potter', '978-1-78110-166-0', '1997-12-28', 'Bloomsbury Publishing', 'Fantasy, Young Adult', 223),
+	('10474404','The Hobbit', '978-0-618-34625-8', '1937-12-28', 'Houghton Mifflin Harcourt', 'Fantasy', 310),
+	('70403512','The Catcher in the Rye', '978-0-316-76953-3', '1951-12-28', 'Little, Brown and Company', 'Fiction', 224),
+	('30427322','To the Lighthouse', '978-0-15-690739-2', '1927-12-28', 'Harcourt Brace & Company', 'Modernist Fiction', 209),
+	('00428549','The Alchemist', '978-0-06-231500-7', '1988-12-28', 'HarperOne', 'Fiction, Philosophy', 197),
+	('20541568','The Lord of the Rings', '978-0-618-05784-6', '1954-12-28', 'Houghton Mifflin Harcourt', 'Fantasy', 1178),
+	('30290362','Moby-Dick', '978-1-85411-008-0', '1851-12-28', 'Wordsworth Editions', 'Adventure Fiction', 544),
+	('50558152','Brave New World', '978-0-06-085052-4', '1932-12-28', 'Harper Perennial Modern Classics', 'Dystopian Fiction', 288),
+	('20468105','The Chronicles of Narnia', '978-0-06-023481-2', '1950-12-28', 'HarperCollins', 'Fantasy', 767);
+
+
+insert into users(user_id, name, address, age, email, account_status)
+values
+	('44006346','Juan','Oresunds Vej 2',22,'juan@gmail.com','Active'),
+	('44006123','Carlos','Jakobs  Vej 21',21,'carlos@gmail.com','Inactive'),
+	('44006231','Jane','Kungs  Vej 13',31,'jane@gmail.com','Active'),
+	('44005643','Pancho','Jagtvej Vej 56',19,'pancho@gmail.com','Active'),
+	('44008645','Maria','Aboulevarden Vej 11',28,'maria@gmail.com','Inactive'),
+	('44007823','Rudy','Blagardsgade 13',29,'rudy@gmail.com','Inactive'),
+	('44006345','Amalie','Norrebro 14 Vej',28,'amalie@gmail.com','Active'),
+	('44005678','Elena','Rosenors Alle 28',27,'elena@gmail.com','Active'),
+	('44009012','Daniele','Isbegata Vej 14',27,'dani@gmail.com','Inactive'),
+	('44005677','Emma','Norrebro 21 Vej 81',27,'emma@gmail.com','Active'),
+	('44005675','Niels','Ravnsborgade 11',27,'niels@gmail.com','Active');
+
+insert into copies_of_books(copy_id, availability, copy_number, book_id, author_id)
+values
+    ('2002', TRUE, 20, '40205660', '00002'),
+    ('2003', FALSE, 13, '60372276', '00001'),
+    ('2004', TRUE, 11, '80331845', '00003'),
+    ('2005', FALSE, 7, '10507584', '00005'),
+    ('2006', TRUE, 22, '70346932', '00002'),
+    ('2007', FALSE, 18, '10474404', '00003'),
+    ('2008', TRUE, 14, '70403512', '00001'),
+    ('2009', FALSE, 9, '30427322', '00004'),
+    ('2010', TRUE, 10, '00428549', '00005'),
+    ('2011', FALSE, 28, '20541568', '00004');
+
+insert into loans(loan_id, started_date, returned_date, due_date, user_id, copy_id)
+values
+    (1001, '2023-05-01', '2023-05-10', '2023-05-15', '44006346', '2002'),
+    (1002, '2023-05-02', '2023-05-11', '2023-05-18', '44006123', '2003'),
+    (1003, '2023-05-03', '2023-05-12', '2023-05-19', '44006231', '2004'),
+    (1004, '2023-05-04', '2023-05-13', '2023-05-20', '44005643', '2005'),
+    (1005, '2023-05-05', '2023-05-14', '2023-05-21', '44008645', '2006'),
+    (1006, '2023-05-06', '2023-05-15', '2023-05-22', '44007823', '2007'),
+    (1007, '2023-05-07', '2023-05-16', '2023-05-23', '44006345', '2008'),
+    (1008, '2023-05-08', '2023-05-17', '2023-05-24', '44005678', '2009'),
+    (1009, '2023-05-09', '2023-05-18', '2023-05-25', '44009012', '2010'),
+    (1010, '2023-05-10', null, '2023-05-26', '44005677', '2011');
+
+insert into fines(fine_amount, fine_status, user_id, loan_id, due_date)
+values
+    (50, 'Paid', '44006346', '1001', '2023-05-15'),
+    (30, 'Unpaid', '44006123', '1002', '2023-05-10'),
+    (20, 'Unpaid', '44006231', '1003', '2023-05-20'),
+    (15, 'Paid', '44005643', '1004', '2023-06-15'),
+    (25, 'Unpaid', '44008645', '1005', '2023-05-18'),
+    (10, 'Paid', '44007823', '1006', '2023-05-15'),
+    (40, 'Unpaid', '44006345', '1007', '2023-05-12'),
+    (35, 'Paid', '44005678', '1008', '2023-05-25'),
+    (5, 'Paid', '44009012', '1009', '2023-05-13'),
+    (20, 'Unpaid', '44005677', '1010', '2023-05-21');
+
+INSERT INTO Book_reviews (Review_ID, Rating, Comment, User_ID, Book_ID)
+VALUES
+    (1, 4, 'Great book!', 44006346, 40205660),
+    (2, 5, 'One of my favorites!', 44006231, 60372276),
+    (3, 3, 'Interesting concept but could be better executed.', 44005643, 80331845),
+    (4, 5, 'A timeless classic.', 44008645, 10507584),
+    (5, 4, 'Loved the characters and the romance.', 44007823, 70346932),
+    (6, 2, 'Not my cup of tea.', 44006345, 10474404),
+    (7, 5, 'Couldn''t put it down!', 44005678, 70403512),
+    (8, 4, 'Beautifully written.', 44009012, 30427322),
+    (9, 5, 'Life-changing.', 44005677, 00428549),
+    (10, 3, 'Enjoyable but forgettable.', 44005675, 20541568);
+
+INSERT INTO Book_author (Author_ID, Book_ID, Field)
+VALUES
+    ('00001', '40205660', 'Fiction'),
+    ('00002', '60372276', 'Mystery'),
+    ('00003', '80331845', 'Science Fiction'),
+    ('00005', '10507584', 'Fantasy'),
+    ('00002', '70346932', 'Mystery'),
+    ('00003', '10474404', 'Science Fiction'),
+    ('00001', '70403512', 'Fiction'),
+    ('00004', '30427322', 'Biography'),
+    ('00005', '00428549', 'Fantasy'),
+    ('00004', '20541568', 'Biography'),
+    ('00008', '30290362', 'Self-Help'),
+    ('00003', '50558152', 'Science Fiction'),
+    ('00100', '20468105', 'History'),
+    ('00101', '20468105', 'History'),
+    ('00120', '20541568', 'Biography'),
+    ('00121', '20541568', 'Biography'),
+    ('00130', '30427322', 'Biography');
+
+-- Check results
+select * from authors;
+select * from book_author;
+select * from book_reviews;
+select * from books;
+select * from copies_of_books;
+select * from fines;
+select * from loans;
+select * from users;
+
+--Retrieve all books by a specific author.
+
+select * from books
+join book_author
+on books.book_id = book_author.book_id and book_author.author_id = 2;
+
+--Retrieve all books published in a specific year or range of years.
+
+select * from books
+where extract(year from publication_year) between 1925 and 1949;
+
+--Retrieve all the expired loans.
+
+select * from loans
+where due_date < (case when returned_date is null then current_date else returned_date end);
+
+--Determine the total number of books available in the library.
+
+select * from copies_of_books
+where availability is True;
+
+--Find the average rating of books based on user reviews.
+select users.name, avg(book_reviews.rating) from book_reviews
+join users
+on users.user_id = book_reviews.user_id
+group by users.name;
+
+
+--Calculate the number of books by each author.
+
+select authors.author_name, count(book_id) as number_of_books
+from book_author
+join authors
+on book_author.author_id = authors.author_id
+group by authors.author_name
+order by number_of_books desc;
+
+--Retrieve the top 10 most borrowed books.
+
+SELECT books.title, COUNT(copies_of_books.book_id) as frequency
+FROM books
+JOIN copies_of_books ON books.book_id = copies_of_books.book_id
+WHERE copies_of_books.copy_id IN (
+    SELECT loans.copy_id
+    FROM loans
+)
+GROUP BY books.title
+order by frequency desc
+limit 10;
+
+--Retrieve the latest books added to the library collection.
+
+select book_id, title, publication_year from books
+order by publication_year desc;
+
+--Retrieve all books with their corresponding author information.
+
+SELECT authors.author_name, books.title
+FROM books
+JOIN book_author ON books.book_id = book_author.book_id
+JOIN authors ON book_author.author_id = authors.author_id
+order by author_name;
+
+--Retrieve the details of top 10 users who have borrowed the most books.
+
+select users.*, count(loan_id) as loan_count
+from users
+join loans
+on users.user_id = loans.user_id
+group by users.user_id
+order by loan_count desc
+limit 10;
+
+--Determine the number of books borrowed by users in a specific age range.
+
+select count(loans.copy_id) from users
+join loans
+on users.user_id = loans.user_id
+where users.age between 19 and 28;
+
+--Reserve and return copies.
+-- Can't achieve with current schema. Maybe to achieve this nned to add one more flag to copies_of_books table for reservation
+
+--Create fines for expired loans, and suspend user account when fine is not paid on time.
+--Create fines for expired loans
+--This query works when the fine_id(primary key) from fines table is created of type SERIAL
+insert into fines (fine_amount, fine_status, loan_id, user_id, due_date)
+select 20 as amt, 'Unpaid' as fstatus, loan_id, user_id, current_date+15 as ddate
+from loans 
+where due_date < (case when returned_date is null then current_date else returned_date end);
+
+--suspend user account when fine is not paid on time
+--TODO Can be modified to handle multiple entries in the fine table for same user_id 
+update users
+set account_status = 'Inactive' 
+where user_id in (
+	select user_id 
+	from fines 
+	where fine_status = 'Unpaid' and due_date < current_date
+); 
+
+--Let users pay for their fines, and reopen their account if needed.
+--TODO Can be more accurate if fine_paid_date is added to the fines table 
+update users
+set account_status = 'Active' 
+where account_status='Inactive' and user_id in (
+	select user_id as uid from fines where fine_status = 'Paid'
+	order by due_date);
+	
+-- Creat some exaples of using View
+
+CREATE VIEW task3_a AS
+SELECT books.book_id AS book_id, books.title AS title, book_author.author_id AS author_id
+FROM books
+JOIN book_author ON books.book_id = book_author.book_id
+WHERE book_author.author_id = 2;
+
+select * from task3_a;
+
+create view task3_b as
+select * from books
+where extract(year from publication_year) between 1925 and 1949;
+
+select * from task3_b;
+
+create view task3_c as
+select * from loans
+where due_date < current_date;
+
+select * from task3_c;
+
+create view task3_g as
+select users.name, avg(book_reviews.rating) from book_reviews
+join users
+on users.user_id = book_reviews.user_id
+group by users.name;
+
+select * from task3_g;
+
+create view task3_m as 
+select count(loans.copy_id) from users
+join loans
+on users.user_id = loans.user_id
+where users.age between 19 and 28;	
+
+select * from task3_m;
+
+-- Trigger to update the availability of a book copy after a loan is created
+CREATE TRIGGER update_copy_availability
+AFTER INSERT ON Loans
+FOR EACH ROW
+BEGIN
+    UPDATE copies_of_books
+    SET Availability = FALSE
+    WHERE copy_id = NEW.copy_id;
+END;
+
+
+
+
